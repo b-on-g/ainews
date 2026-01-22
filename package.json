@@ -190,6 +190,7 @@
     "$mol_lights_toggle",
     "$mol_check_icon",
     "$mol_check",
+    "$mol_dom_event",
     "$mol_icon_brightness_4",
     "$mol_icon_brightness",
     "$bog_theme_auto",
