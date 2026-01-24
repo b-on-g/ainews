@@ -32,6 +32,7 @@
 	pack pay_server git \https://github.com/best-online-games/pay_server.git
 	pack card git \https://github.com/best-online-games/card.git
 	pack calculator git \https://github.com/b-on-g/calculator.git
+	pack bzrl git \https://github.com/BezRieltora/bzrl.git
 \/mol
 	pack icon git \https://github.com/nin-jin/mol_icon.git
 \/mol/view
