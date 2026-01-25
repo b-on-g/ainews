@@ -33,6 +33,8 @@
 	pack card git \https://github.com/best-online-games/card.git
 	pack calculator git \https://github.com/b-on-g/calculator.git
 	pack bzrl git \https://github.com/BezRieltora/bzrl.git
+	pack slider git \https://github.com/b-on-g/slider.git
+	pack snow git \https://github.com/b-on-g/snow.git
 \/mol
 	pack icon git \https://github.com/nin-jin/mol_icon.git
 \/mol/view
