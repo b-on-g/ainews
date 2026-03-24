@@ -6708,6 +6708,7 @@ var $;
 "use strict";
 var $;
 (function ($) {
+    let x = /x/[Symbol.matchAll];
     class $mol_regexp extends RegExp {
         groups;
         constructor(source, flags = 'gsu', groups = []) {
@@ -8246,6 +8247,14 @@ var $;
 		theme_dark(){
 			return "$mol_theme_dark";
 		}
+		mode(next){
+			if(next !== undefined) return next;
+			return "system";
+		}
+		mode_next(next){
+			if(next !== undefined) return next;
+			return null;
+		}
 		theme_next(next){
 			if(next !== undefined) return next;
 			return null;
@@ -8262,6 +8271,8 @@ var $;
 			return {"mol_theme": (this.theme())};
 		}
 	};
+	($mol_mem(($.$bog_theme_auto.prototype), "mode"));
+	($mol_mem(($.$bog_theme_auto.prototype), "mode_next"));
 	($mol_mem(($.$bog_theme_auto.prototype), "theme_next"));
 	($mol_mem(($.$bog_theme_auto.prototype), "theme_prev"));
 	($mol_mem(($.$bog_theme_auto.prototype), "theme_set"));
@@ -8276,6 +8287,14 @@ var $;
         class $bog_theme_auto extends $.$bog_theme_auto {
             themes_default() {
                 return this.$.$bog_theme_names;
+            }
+            mode(next) {
+                return this.$.$mol_state_local.value(`${this}.mode()`, next) ?? 'system';
+            }
+            mode_next() {
+                const cycle = ['system', 'light', 'dark'];
+                const i = cycle.indexOf(this.mode());
+                this.mode(cycle[i === -1 ? 0 : (i + 1) % cycle.length]);
             }
             theme_index(next) {
                 const stored = this.$.$mol_state_local.value(`${this}.theme_index()`, next);
@@ -8292,33 +8311,51 @@ var $;
                 return index !== -1 ? index : 0;
             }
             theme() {
-                const themes = this.themes();
-                const index = this.theme_index();
-                if (themes.length === 0)
-                    return '$mol_theme_light';
-                return themes[index % themes.length];
+                const mode = this.mode();
+                if (mode === 'light')
+                    return this.theme_light();
+                if (mode === 'dark')
+                    return this.theme_dark();
+                if (mode === 'custom') {
+                    const themes = this.themes();
+                    const index = this.theme_index();
+                    if (themes.length === 0)
+                        return this.theme_light();
+                    return themes[index % themes.length];
+                }
+                return this.$.$mol_lights() ? this.theme_light() : this.theme_dark();
             }
             theme_next() {
-                const themes = this.themes();
-                if (themes.length === 0)
-                    return;
-                const current = this.theme_index();
-                this.theme_index((current + 1) % themes.length);
+                this.mode_next();
             }
             theme_prev() {
-                const themes = this.themes();
-                if (themes.length === 0)
-                    return;
-                const current = this.theme_index();
-                this.theme_index(current === 0 ? themes.length - 1 : current - 1);
+                const cycle = ['system', 'light', 'dark'];
+                const i = cycle.indexOf(this.mode());
+                this.mode(cycle[i <= 0 ? cycle.length - 1 : i - 1]);
             }
             theme_set(index) {
                 const themes = this.themes();
                 if (themes.length === 0)
                     return;
-                this.theme_index(index % themes.length);
+                const theme = themes[index % themes.length];
+                if (theme === this.theme_light()) {
+                    this.mode('light');
+                }
+                else if (theme === this.theme_dark()) {
+                    this.mode('dark');
+                }
+                else {
+                    this.mode('custom');
+                    this.theme_index(index % themes.length);
+                }
             }
         }
+        __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "mode", null);
+        __decorate([
+            $mol_action
+        ], $bog_theme_auto.prototype, "mode_next", null);
         __decorate([
             $mol_mem
         ], $bog_theme_auto.prototype, "theme_index", null);

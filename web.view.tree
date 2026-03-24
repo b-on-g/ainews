@@ -383,6 +383,8 @@ $bog_theme_auto $mol_plugin
 	themes <= themes_default /
 	theme_light \$mol_theme_light
 	theme_dark \$mol_theme_dark
+	mode? \system
+	mode_next? null
 	theme_next? null
 	theme_prev? null
 	theme_set? null

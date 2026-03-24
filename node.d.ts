@@ -2217,7 +2217,7 @@ declare namespace $ {
     export class $mol_regexp<Groups extends Record<string, string>> extends RegExp {
         readonly groups: (Extract<keyof Groups, string>)[];
         constructor(source: string, flags?: string, groups?: (Extract<keyof Groups, string>)[]);
-        [Symbol.matchAll](str: string): RegExpStringIterator<RegExpMatchArray & $mol_type_override<RegExpMatchArray, {
+        [Symbol.matchAll](str: string): RegExpStringIterator<RegExpExecArray & $mol_type_override<RegExpExecArray, {
             groups?: {
                 [key in keyof Groups]: string;
             };
@@ -2877,6 +2877,8 @@ declare namespace $ {
 		themes( ): ReturnType< $bog_theme_auto['themes_default'] >
 		theme_light( ): string
 		theme_dark( ): string
+		mode( next?: string ): string
+		mode_next( next?: any ): any
 		theme_next( next?: any ): any
 		theme_prev( next?: any ): any
 		theme_set( next?: any ): any
@@ -2889,8 +2891,11 @@ declare namespace $ {
 
 //# sourceMappingURL=auto.view.tree.d.ts.map
 declare namespace $.$$ {
+    type $bog_theme_mode = 'light' | 'dark' | 'system' | 'custom';
     class $bog_theme_auto extends $.$bog_theme_auto {
         themes_default(): readonly $.$bog_theme_name[];
+        mode(next?: $bog_theme_mode): $bog_theme_mode;
+        mode_next(): void;
         theme_index(next?: number): number;
         system_theme_index(): number;
         theme(): any;
