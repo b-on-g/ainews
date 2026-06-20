@@ -3615,6 +3615,20 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    class $mol_state_session<Value> extends $mol_object {
+        static 'native()': Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
+        static native(): Storage | {
+            getItem(key: string): any;
+            setItem(key: string, value: string): void;
+            removeItem(key: string): void;
+        };
+        static value<Value>(key: string, next?: Value): Value;
+        prefix(): string;
+        value(key: string, next?: Value): Value;
+    }
+}
+
+declare namespace $ {
 
 	export class $bog_theme_auto extends $mol_plugin {
 		themes_default( ): readonly(any)[]
@@ -3627,6 +3641,7 @@ declare namespace $ {
 		theme_next( next?: any ): any
 		theme_prev( next?: any ): any
 		theme_set( next?: any ): any
+		is_light_now( ): boolean
 		attr( ): ({ 
 			'mol_theme': ReturnType< $bog_theme_auto['theme'] >,
 		}) 
@@ -3641,8 +3656,10 @@ declare namespace $.$$ {
         themes_default(): readonly $.$bog_theme_name[];
         /** Stores current mode in localStorage. Defaults to 'system'. */
         mode(next?: $bog_theme_mode): $bog_theme_mode;
-        /** Cycles: system → light → dark → system (skips 'custom') */
+        click_step(next?: number): number;
+        /** 3-click cycle: opposite → back → system. */
         mode_next(): void;
+        is_light_now(): any;
         theme_index(next?: number): number;
         system_theme_index(): number;
         theme(): any;
@@ -3739,20 +3756,6 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
-}
-
-declare namespace $ {
-    class $mol_state_session<Value> extends $mol_object {
-        static 'native()': Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
-        static native(): Storage | {
-            getItem(key: string): any;
-            setItem(key: string, value: string): void;
-            removeItem(key: string): void;
-        };
-        static value<Value>(key: string, next?: Value): Value;
-        prefix(): string;
-        value(key: string, next?: Value): Value;
-    }
 }
 
 declare namespace $ {

@@ -8715,6 +8715,9 @@ var $;
 			if(next !== undefined) return next;
 			return null;
 		}
+		is_light_now(){
+			return false;
+		}
 		attr(){
 			return {"mol_theme": (this.theme())};
 		}
@@ -8725,6 +8728,58 @@ var $;
 	($mol_mem(($.$bog_theme_auto.prototype), "theme_prev"));
 	($mol_mem(($.$bog_theme_auto.prototype), "theme_set"));
 
+
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_state_session extends $mol_object {
+        static 'native()';
+        static native() {
+            if (this['native()'])
+                return this['native()'];
+            check: try {
+                const native = $mol_dom_context.sessionStorage;
+                if (!native)
+                    break check;
+                native.setItem('', '');
+                native.removeItem('');
+                return this['native()'] = native;
+            }
+            catch (error) {
+                console.warn(error);
+            }
+            return this['native()'] = {
+                getItem(key) {
+                    return this[':' + key];
+                },
+                setItem(key, value) {
+                    this[':' + key] = value;
+                },
+                removeItem(key) {
+                    this[':' + key] = void 0;
+                }
+            };
+        }
+        static value(key, next) {
+            if (next === void 0)
+                return JSON.parse(this.native().getItem(key) || 'null');
+            if (next === null)
+                this.native().removeItem(key);
+            else
+                this.native().setItem(key, JSON.stringify(next));
+            return next;
+        }
+        prefix() { return ''; }
+        value(key, next) {
+            return $mol_state_session.value(this.prefix() + '.' + key, next);
+        }
+    }
+    __decorate([
+        $mol_mem_key
+    ], $mol_state_session, "value", null);
+    $.$mol_state_session = $mol_state_session;
+})($ || ($ = {}));
 
 ;
 "use strict";
@@ -8744,11 +8799,27 @@ var $;
             mode(next) {
                 return this.$.$mol_state_local.value(`${this}.mode()`, next) ?? 'system';
             }
-            /** Cycles: system → light → dark → system (skips 'custom') */
+            click_step(next) {
+                return this.$.$mol_state_session.value(`${this}.click_step()`, next) ?? 0;
+            }
+            /** 3-click cycle: opposite → back → system. */
             mode_next() {
-                const cycle = ['system', 'light', 'dark'];
-                const i = cycle.indexOf(this.mode());
-                this.mode(cycle[i === -1 ? 0 : (i + 1) % cycle.length]);
+                const step = (this.click_step() + 1) % 3;
+                this.click_step(step);
+                if (step === 0)
+                    this.mode('system');
+                else
+                    this.mode(this.is_light_now() ? 'dark' : 'light');
+            }
+            is_light_now() {
+                const mode = this.mode();
+                if (mode === 'light')
+                    return true;
+                if (mode === 'dark')
+                    return false;
+                if (mode === 'system')
+                    return this.$.$mol_lights();
+                return this.theme().toLowerCase().includes('light');
             }
             theme_index(next) {
                 const stored = this.$.$mol_state_local.value(`${this}.theme_index()`, next);
@@ -8804,14 +8875,21 @@ var $;
                     this.mode('custom');
                     this.theme_index(index % themes.length);
                 }
+                this.click_step(0);
             }
         }
         __decorate([
             $mol_mem
         ], $bog_theme_auto.prototype, "mode", null);
         __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "click_step", null);
+        __decorate([
             $mol_action
         ], $bog_theme_auto.prototype, "mode_next", null);
+        __decorate([
+            $mol_mem
+        ], $bog_theme_auto.prototype, "is_light_now", null);
         __decorate([
             $mol_mem
         ], $bog_theme_auto.prototype, "theme_index", null);
@@ -8984,58 +9062,6 @@ var $;
 	};
 	($mol_mem(($.$mol_switch.prototype), "value"));
 
-
-;
-"use strict";
-var $;
-(function ($) {
-    class $mol_state_session extends $mol_object {
-        static 'native()';
-        static native() {
-            if (this['native()'])
-                return this['native()'];
-            check: try {
-                const native = $mol_dom_context.sessionStorage;
-                if (!native)
-                    break check;
-                native.setItem('', '');
-                native.removeItem('');
-                return this['native()'] = native;
-            }
-            catch (error) {
-                console.warn(error);
-            }
-            return this['native()'] = {
-                getItem(key) {
-                    return this[':' + key];
-                },
-                setItem(key, value) {
-                    this[':' + key] = value;
-                },
-                removeItem(key) {
-                    this[':' + key] = void 0;
-                }
-            };
-        }
-        static value(key, next) {
-            if (next === void 0)
-                return JSON.parse(this.native().getItem(key) || 'null');
-            if (next === null)
-                this.native().removeItem(key);
-            else
-                this.native().setItem(key, JSON.stringify(next));
-            return next;
-        }
-        prefix() { return ''; }
-        value(key, next) {
-            return $mol_state_session.value(this.prefix() + '.' + key, next);
-        }
-    }
-    __decorate([
-        $mol_mem_key
-    ], $mol_state_session, "value", null);
-    $.$mol_state_session = $mol_state_session;
-})($ || ($ = {}));
 
 ;
 "use strict";
