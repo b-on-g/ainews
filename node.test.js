@@ -9207,8 +9207,16 @@ var $;
             themes_default() {
                 return this.$.$bog_theme_names;
             }
-            /** Stores current mode in localStorage. Defaults to 'system'. */
+            /** Stores current mode in localStorage. Defaults to 'system'.
+             *  При записи дёргает класс `.bog_theme_switching` на `<html>` —
+             *  это активирует CSS-transition'ы на цветах темы.
+             */
             mode(next) {
+                if (next !== undefined && typeof document !== 'undefined') {
+                    const root = document.documentElement;
+                    root.classList.add('bog_theme_switching');
+                    setTimeout(() => root.classList.remove('bog_theme_switching'), 350);
+                }
                 return this.$.$mol_state_local.value(`${this}.mode()`, next) ?? 'system';
             }
             click_step(next) {
@@ -9322,6 +9330,13 @@ var $;
         ], $bog_theme_auto.prototype, "theme_set", null);
         $$.$bog_theme_auto = $bog_theme_auto;
     })($$ = $.$$ || ($.$$ = {}));
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    $mol_style_attach("bog/theme/auto/auto.view.css", ".bog_theme_switching,\n.bog_theme_switching * {\n\ttransition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, fill 300ms ease !important;\n}\n\n@media (prefers-reduced-motion: reduce) {\n\t.bog_theme_switching,\n\t.bog_theme_switching * {\n\t\ttransition: none !important;\n\t}\n}\n");
 })($ || ($ = {}));
 
 ;
