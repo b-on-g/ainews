@@ -63,6 +63,7 @@
 	pack meta git \https://github.com/b-on-g/meta.git
 	pack popup git \https://github.com/b-on-g/popup.git
 	pack qr git \https://github.com/b-on-g/qr.git
+	pack rec git \https://github.com/b-on-g/rec.git
 	pack recsys git \https://github.com/b-on-g/recsys.git
 	pack requisites git \https://github.com/b-on-g/requisites.git
 	pack sample git \https://github.com/b-on-g/sample.git
@@ -101,6 +102,7 @@
 	pack merch git \https://github.com/b-on-g/merch.git
 	pack tox git \https://github.com/b-on-g/tox.git
 	pack sert git \https://github.com/b-on-g/sert.git
+	pack bg git \https://github.com/b-on-g/bg.git
 \/mol
 	pack icon git \https://github.com/nin-jin/mol_icon.git
 \/mol/view
