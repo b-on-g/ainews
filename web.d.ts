@@ -3614,6 +3614,7 @@ declare namespace $.$$ {
         click_step(next?: number): number;
         /** 3-click cycle: opposite → back → system. */
         mode_next(): void;
+        system_light(): boolean;
         is_light_now(): any;
         theme_index(next?: number): number;
         system_theme_index(): number;
